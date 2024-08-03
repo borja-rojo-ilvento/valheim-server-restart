@@ -10,24 +10,12 @@
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs { inherit system; };
-        rangehttpserver = pkgs.python3Packages.buildPythonPackage rec {
-          pname = "rangehttpserver";
-          version = "1.3.3";
-          src = pkgs.fetchPypi {
-            inherit pname version;
-            sha256 = "sha256-jfa7pg1oj080nIWuFRy557g9osn9CM9io9ZO8y4GNwM"; # Replace with actual sha256
-          };
-          doCheck = false;
-        };
-        server_env = pkgs.python3.withPackages (ps: [ rangehttpserver ]);
+        server_env = pkgs.python3.withPackages (ps: with ps; [ rangehttpserver ]);
       in
       with pkgs; rec {
-        packages.default = [
-            server_env
-        ];
         devShells.default = mkShell {
           buildInputs = [
-            self.packages.${system}.default
+              server_env
           ];
         };
         apps.default = {
@@ -35,7 +23,7 @@
           program = "${pkgs.writeShellApplication 
             {
               name = "run-webserver";
-              runtimeInputs = self.packages.${system}.default;
+              runtimeInputs = [ server_env ];
               text = ''
                 cd "$(dirname "$0")"
                 exec ${server_env}/bin/python3 -m rangehttpserver
