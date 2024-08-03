@@ -10,23 +10,29 @@
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs { inherit system; };
-        server_env = pkgs.python3.withPackages (ps: with ps; [ rangehttpserver ]);
-      in
+      in 
       with pkgs; rec {
+        packages = {
+            python_env = python3.withPackages (ps: with ps; [
+              rangehttpserver
+            ]);
+            default = [
+              packages.python_env
+            ];
+          }; 
         devShells.default = mkShell {
           buildInputs = [
-              server_env
+              packages.default
           ];
         };
-        apps.default = {
+        apps.dashboard = {
           type = "app";
           program = "${pkgs.writeShellApplication 
             {
               name = "run-webserver";
-              runtimeInputs = [ server_env ];
+              runtimeInputs = packages.default;
               text = ''
-                cd "$(dirname "$0")"
-                exec ${server_env}/bin/python3 -m rangehttpserver
+                exec ${packages.python_env}/bin/python3 -m RangeHTTPServer
               '';
             }}/bin/run-webserver";
         };

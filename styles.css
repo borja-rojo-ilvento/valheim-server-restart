@@ -1,0 +1,22 @@
+body { 
+	width: fit-content;
+	margin: auto;
+} 
+
+table, td, th {
+	border: 1px solid;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+td {
+	min-width: 150px;
+}
+
+button {
+	display: block;
+	margin: auto;
+}
+
