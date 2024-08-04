@@ -25,7 +25,7 @@
               packages.default
           ];
         };
-        apps.dashboard = {
+        apps.default = {
           type = "app";
           program = "${pkgs.writeShellApplication 
             {
