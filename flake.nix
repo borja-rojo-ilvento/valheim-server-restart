@@ -16,9 +16,7 @@
           python_env = python3.withPackages (ps: with ps; [
             rangehttpserver
           ]);
-          default = [
-            packages.python_env
-          ];
+          default = packages.python_env;
         }; 
         devShells.default = mkShell {
           buildInputs = [
