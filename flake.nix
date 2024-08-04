@@ -11,7 +11,7 @@
       let
         pkgs = import nixpkgs { inherit system; };
       in 
-      with pkgs; rec {
+      with pkgs; {
         packages = {
           python_env = python3.withPackages (ps: with ps; [
             rangehttpserver
